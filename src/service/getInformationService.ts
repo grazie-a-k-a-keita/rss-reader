@@ -52,6 +52,8 @@ export class GetInformationService {
 
 			// 新規フィードを通知
 			for (const feed of newFeeds) {
+				// 1秒おきに通知する（DiscordのWebhookのレートリミット対策）
+				await new Promise((resolve) => setTimeout(resolve, 1000));
 				await this.notifyService.execute({ content: feed.toNotifyMessage() });
 			}
 
