@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { parseFeed } from "feedsmith";
 import { Feed } from "../model/feed.js";
-import { FeedList } from "../model/feed-list.js";
+import { FeedList } from "../model/feedList.js";
 import { History } from "../model/history.js";
 import type { HistoriesRepository } from "../repository/historiesRepository.js";
 import type { TargetsRepository } from "../repository/targetsRepository.js";

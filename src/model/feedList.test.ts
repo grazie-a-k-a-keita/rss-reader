@@ -4,7 +4,7 @@ import {
 	historyBuilder,
 	targetBuilder,
 } from "../lib/test-helper.js";
-import { FeedList } from "./feed-list.js";
+import { FeedList } from "./feedList.js";
 
 describe("FeedList", () => {
 	test("履歴に存在する「Java入門」のフィードを除外できること", () => {
