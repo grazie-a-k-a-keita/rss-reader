@@ -3,7 +3,8 @@
 ### 事前準備
 
 1. `src/data/targets.csv`に情報収集の対象となるRSSフィードのURLを記載する。
-2. 実行する！
+2. `src/data/exceptKeyword.txt`に除外したいフィードのキーワードを記載する。
+3. 実行する！
 
 ### 起動方法
 
