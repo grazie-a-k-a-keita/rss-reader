@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { parseFeed } from "feedsmith";
 import { Feed } from "../model/feed.js";
+import { FeedList } from "../model/feed-list.js";
 import { History } from "../model/history.js";
 import type { HistoriesRepository } from "../repository/historiesRepository.js";
 import type { TargetsRepository } from "../repository/targetsRepository.js";
@@ -40,18 +41,13 @@ export class GetInformationService {
 					);
 				});
 
-			// 履歴に存在する通知済みのフィードを除外
-			const newFeeds = feeds.filter(
-				(feed) =>
-					!histories.some(
-						(history) =>
-							history.targetTitle === feed.target.title &&
-							history.title === feed.title,
-					),
-			);
+			// 履歴に存在する通知済みのフィードと、タイトルに特定のキーワードを含むフィードを除外
+			const newFeeds = new FeedList(feeds)
+				.filterHistories(histories)
+				.filterByKeywords(["claude", "copilot", "codex", "ai"]);
 
 			// 新規フィードを通知
-			for (const feed of newFeeds) {
+			for (const feed of newFeeds.feeds) {
 				// 1秒おきに通知する（DiscordのWebhookのレートリミット対策）
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 				await this.notifyService.execute({ content: feed.toNotifyMessage() });
@@ -59,7 +55,7 @@ export class GetInformationService {
 
 			// 通知した新規フィードを履歴に追加
 			this.historiesRepository.bulkInsertNewHistories(
-				newFeeds.map(
+				newFeeds.feeds.map(
 					(feed) =>
 						new History(
 							feed.target.title,
