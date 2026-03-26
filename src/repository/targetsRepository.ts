@@ -34,3 +34,11 @@ export class CsvTargetsRepository implements TargetsRepository {
 		return result;
 	}
 }
+
+export class InMemoryTargetsRepository implements TargetsRepository {
+	public constructor(private targets: Target[] = []) {}
+
+	public async findAll(): Promise<Target[]> {
+		return this.targets;
+	}
+}

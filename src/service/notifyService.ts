@@ -1,7 +1,11 @@
+export interface INotifyService {
+	execute(message: { content: string }): Promise<void>;
+}
+
 export class NotifyService {
 	public constructor(private readonly discordWebhookUrl: string) {}
 
-	public async execute(message: { content: string }) {
+	public async execute(message: { content: string }): Promise<void> {
 		const res = await fetch(this.discordWebhookUrl, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },

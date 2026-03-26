@@ -1,19 +1,19 @@
 import dayjs from "dayjs";
-import { parseFeed } from "feedsmith";
-import { Feed } from "../model/feed.js";
 import { FeedList } from "../model/feedList.js";
 import { History } from "../model/history.js";
 import type { ExceptKeywordRepository } from "../repository/exceptKeywordRepository.js";
 import type { HistoriesRepository } from "../repository/historiesRepository.js";
 import type { TargetsRepository } from "../repository/targetsRepository.js";
-import type { NotifyService } from "./notifyService.js";
+import type { IFetchFeedService } from "./fetchFeedService.js";
+import type { INotifyService } from "./notifyService.js";
 
 export class GetInformationService {
 	public constructor(
 		private readonly exceptKeywordRepository: ExceptKeywordRepository,
 		private readonly targetsRepository: TargetsRepository,
 		private readonly historiesRepository: HistoriesRepository,
-		private readonly notifyService: NotifyService,
+		private readonly fetchFeedService: IFetchFeedService,
+		private readonly notifyService: INotifyService,
 	) {}
 
 	public async execute() {
@@ -28,21 +28,7 @@ export class GetInformationService {
 		// 対象ごとに処理
 		for (const target of targets) {
 			// フィードを取得
-			const feeds = await fetch(target.url)
-				.then((response) => response.text())
-				.then((text) => {
-					const { format, feed } = parseFeed(text);
-
-					if (format !== "rdf" && format !== "rss") {
-						throw new Error(
-							`Unsupported feed format: ${format}, URL: ${target.url}`,
-						);
-					}
-
-					return (feed.items ?? []).map(
-						(item) => new Feed(item.title ?? "", item.link ?? "", target),
-					);
-				});
+			const feeds = await this.fetchFeedService.execute(target);
 
 			// 履歴に存在する通知済みのフィードと、タイトルに特定のキーワードを含むフィードを除外
 			const newFeeds = new FeedList(feeds)
@@ -57,7 +43,7 @@ export class GetInformationService {
 			}
 
 			// 通知した新規フィードを履歴に追加
-			this.historiesRepository.bulkInsertNewHistories(
+			await this.historiesRepository.bulkInsertNewHistories(
 				newFeeds.feeds.map(
 					(feed) =>
 						new History(

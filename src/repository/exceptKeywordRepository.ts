@@ -18,3 +18,13 @@ export class FileExceptKeywordRepository implements ExceptKeywordRepository {
 			.filter((k) => k.length > 0);
 	}
 }
+
+export class InMemoryExceptKeywordRepository
+	implements ExceptKeywordRepository
+{
+	public constructor(private keywords: string[] = []) {}
+
+	public async getKeywords(): Promise<string[]> {
+		return this.keywords;
+	}
+}

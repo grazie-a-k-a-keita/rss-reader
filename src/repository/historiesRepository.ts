@@ -59,3 +59,21 @@ export class CsvHistoriesRepository implements HistoriesRepository {
 		fs.writeFileSync(this.PATH, lines.join("\n"));
 	}
 }
+
+export class InMemoryHistoriesRepository implements HistoriesRepository {
+	public constructor(private histories: History[] = []) {}
+
+	public async findAll(): Promise<History[]> {
+		return this.histories;
+	}
+
+	public async deleteExpiredHistories(): Promise<void> {
+		this.histories = this.histories.filter((history) =>
+			dayjs(history.expireDate).isAfter(dayjs()),
+		);
+	}
+
+	public async bulkInsertNewHistories(newHistories: History[]): Promise<void> {
+		this.histories.push(...newHistories);
+	}
+}
