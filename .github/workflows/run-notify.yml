@@ -2,7 +2,7 @@ name: Run Notify
 
 on:
   schedule:
-    - cron: '0 9 * * *'
+    - cron: "0 9 * * *"
   workflow_dispatch:
 
 permissions:
@@ -18,18 +18,23 @@ jobs:
         with:
           persist-credentials: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run notify
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: npm run dev
+        run: pnpm run dev
 
       - name: Commit CSV changes
         env:
