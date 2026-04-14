@@ -12,10 +12,19 @@ export class RssFeedRepository implements FeedRepository {
 			.then((text) => {
 				const { format, feed } = parseFeed(text);
 
-				// RSSとRDFのみ対応
-				if (format !== "rdf" && format !== "rss") {
+				if (format === "json") {
 					throw new Error(
 						`Unsupported feed format: ${format}, URL: ${url.value}`,
+					);
+				}
+
+				if (format === "atom") {
+					return (feed.entries ?? []).map((entry) =>
+						Feed.create(
+							new Title(entry.title ?? ""),
+							new Link(entry.links?.[0]?.href ?? ""),
+							url,
+						),
 					);
 				}
 
