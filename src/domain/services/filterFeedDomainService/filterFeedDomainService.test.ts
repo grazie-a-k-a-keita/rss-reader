@@ -43,18 +43,9 @@ describe("FilterFeedDomainService", () => {
 			new Link("https://example.com/rss"),
 			new Url("https://example.com/catalog/soon.xml"),
 		);
-		const history = History.create(
-			new Category("新刊情報"),
-			new HistoryTitle("新しい記事A"),
-			new Expire(futureDate),
-		);
+		const history = History.create(new Category("新刊情報"), new HistoryTitle("新しい記事A"), new Expire(futureDate));
 
-		const result = filterFeedDomainService.filter(
-			[target],
-			[feed1, feed2],
-			[history],
-			[],
-		);
+		const result = filterFeedDomainService.filter([target], [feed1, feed2], [history], []);
 
 		expect(result).toHaveLength(1);
 		expect(result[0].title.value).toBe("新しい記事B");
@@ -73,12 +64,7 @@ describe("FilterFeedDomainService", () => {
 		);
 		const keyword = ExceptKeyword.create(new Character("typescript"));
 
-		const result = filterFeedDomainService.filter(
-			[],
-			[feed1, feed2],
-			[],
-			[keyword],
-		);
+		const result = filterFeedDomainService.filter([], [feed1, feed2], [], [keyword]);
 
 		expect(result).toHaveLength(1);
 		expect(result[0].title.value).toBe("JavaScriptの応用");
@@ -86,16 +72,8 @@ describe("FilterFeedDomainService", () => {
 
 	test("履歴にもキーワードにも該当しないフィードはすべて保持されること", () => {
 		const feeds = [
-			Feed.create(
-				new FeedTitle("記事1"),
-				new Link("https://example.com/1"),
-				new Url("https://example.com/url1"),
-			),
-			Feed.create(
-				new FeedTitle("記事2"),
-				new Link("https://example.com/2"),
-				new Url("https://example.com/url2"),
-			),
+			Feed.create(new FeedTitle("記事1"), new Link("https://example.com/1"), new Url("https://example.com/url1")),
+			Feed.create(new FeedTitle("記事2"), new Link("https://example.com/2"), new Url("https://example.com/url2")),
 		];
 
 		const result = filterFeedDomainService.filter([], feeds, [], []);
@@ -116,18 +94,9 @@ describe("FilterFeedDomainService", () => {
 			new Url("https://example.com/a"),
 		);
 		// 履歴には同名タイトルがあるが、カテゴリーが「ブログB」
-		const historyFromB = History.create(
-			new Category("ブログB"),
-			new HistoryTitle("記事A"),
-			new Expire(futureDate),
-		);
+		const historyFromB = History.create(new Category("ブログB"), new HistoryTitle("記事A"), new Expire(futureDate));
 
-		const result = filterFeedDomainService.filter(
-			[targetA],
-			[feedA],
-			[historyFromB],
-			[],
-		);
+		const result = filterFeedDomainService.filter([targetA], [feedA], [historyFromB], []);
 
 		expect(result).toHaveLength(1);
 		expect(result[0].title.value).toBe("記事A");

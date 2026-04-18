@@ -31,26 +31,18 @@ describe("TransferModelDomainService", () => {
 			new Retention(7),
 		);
 		const feeds = [
-			Feed.create(
-				new FeedTitle("記事1"),
-				new Link("https://example.com/1"),
-				new Url("https://example.com/rss"),
-			),
-			Feed.create(
-				new FeedTitle("記事2"),
-				new Link("https://example.com/2"),
-				new Url("https://example.com/rss"),
-			),
+			Feed.create(new FeedTitle("記事1"), new Link("https://example.com/1"), new Url("https://example.com/rss")),
+			Feed.create(new FeedTitle("記事2"), new Link("https://example.com/2"), new Url("https://example.com/rss")),
 		];
 
 		const result = transferModelDomainService.toHistory(target, feeds);
 
 		expect(result).toHaveLength(2);
-		expect(result[0].category.value).toBe("ニュース");
-		expect(result[0].title.value).toBe("記事1");
+		expect(result[0]?.category.value).toBe("ニュース");
+		expect(result[0]?.title.value).toBe("記事1");
 		const expectedExpire = dayjs("2024-01-01T00:00:00Z").add(7, "day").toDate();
-		expect(result[0].expire.value).toEqual(expectedExpire);
-		expect(result[1].title.value).toBe("記事2");
+		expect(result[0]?.expire.value).toEqual(expectedExpire);
+		expect(result[1]?.title.value).toBe("記事2");
 	});
 
 	it("空のFeed配列を渡した場合は空のHistory配列を返すこと", () => {

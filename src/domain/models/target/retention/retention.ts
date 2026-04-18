@@ -7,15 +7,11 @@ export class Retention extends ValueObject<number, "Retention"> {
 
 	protected validate(value: number): void {
 		if (value > Retention.MAX_DAYS) {
-			throw new Error(
-				`Retention must be less than or equal to ${Retention.MAX_DAYS} days`,
-			);
+			throw new Error(`Retention must be less than or equal to ${Retention.MAX_DAYS} days`);
 		}
 
 		if (value < Retention.MIN_DAYS) {
-			throw new Error(
-				`Retention must be greater than or equal to ${Retention.MIN_DAYS} days`,
-			);
+			throw new Error(`Retention must be greater than or equal to ${Retention.MIN_DAYS} days`);
 		}
 	}
 }

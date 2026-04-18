@@ -13,27 +13,17 @@ export class RssFeedRepository implements FeedRepository {
 				const { format, feed } = parseFeed(text);
 
 				if (format === "json") {
-					throw new Error(
-						`Unsupported feed format: ${format}, URL: ${url.value}`,
-					);
+					throw new Error(`Unsupported feed format: ${format}, URL: ${url.value}`);
 				}
 
 				if (format === "atom") {
 					return (feed.entries ?? []).map((entry) =>
-						Feed.create(
-							new Title(entry.title ?? ""),
-							new Link(entry.links?.[0]?.href ?? ""),
-							url,
-						),
+						Feed.create(new Title(entry.title ?? ""), new Link(entry.links?.[0]?.href ?? ""), url),
 					);
 				}
 
 				return (feed.items ?? []).map((item) =>
-					Feed.create(
-						new Title(item.title ?? ""),
-						new Link(item.link ?? ""),
-						url,
-					),
+					Feed.create(new Title(item.title ?? ""), new Link(item.link ?? ""), url),
 				);
 			});
 	}

@@ -6,15 +6,11 @@ export class Title extends ValueObject<string, "Title"> {
 
 	protected validate(value: string): void {
 		if (value.length > Title.MAX_LENGTH) {
-			throw new Error(
-				`Title must be less than or equal to ${Title.MAX_LENGTH} characters`,
-			);
+			throw new Error(`Title must be less than or equal to ${Title.MAX_LENGTH} characters`);
 		}
 
 		if (value.length < Title.MIN_LENGTH) {
-			throw new Error(
-				`Title must be greater than or equal to ${Title.MIN_LENGTH} characters`,
-			);
+			throw new Error(`Title must be greater than or equal to ${Title.MIN_LENGTH} characters`);
 		}
 	}
 }

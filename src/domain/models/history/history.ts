@@ -9,11 +9,7 @@ export class History {
 		public readonly expire: Expire,
 	) {}
 
-	public static create(
-		category: Category,
-		title: Title,
-		expireDate: Expire,
-	): History {
+	public static create(category: Category, title: Title, expireDate: Expire): History {
 		return new History(category, title, expireDate);
 	}
 }

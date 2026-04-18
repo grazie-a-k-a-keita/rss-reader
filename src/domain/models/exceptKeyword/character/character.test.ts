@@ -8,14 +8,10 @@ describe("Character", () => {
 	});
 
 	test("文字列が31文字以上の場合、Characterクラスのインスタンスを作成しようとするとエラーが発生すること", () => {
-		expect(() => new Character("A".repeat(31))).toThrow(
-			"Character must be less than or equal to 30 characters",
-		);
+		expect(() => new Character("A".repeat(31))).toThrow("Character must be less than or equal to 30 characters");
 	});
 
 	test("空文字の場合、Characterクラスのインスタンスを作成しようとするとエラーが発生すること", () => {
-		expect(() => new Character("")).toThrow(
-			"Character must be greater than or equal to 1 characters",
-		);
+		expect(() => new Character("")).toThrow("Character must be greater than or equal to 1 characters");
 	});
 });

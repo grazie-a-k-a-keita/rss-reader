@@ -14,9 +14,7 @@ describe("Expire", () => {
 		const pastDate = new Date();
 		pastDate.setDate(pastDate.getDate() - 1);
 
-		expect(() => new Expire(pastDate)).toThrow(
-			"Expire date cannot be in the past",
-		);
+		expect(() => new Expire(pastDate)).toThrow("Expire date cannot be in the past");
 	});
 
 	describe("addDays()", () => {

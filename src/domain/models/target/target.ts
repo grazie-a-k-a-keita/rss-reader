@@ -11,12 +11,7 @@ export class Target {
 		public readonly retention: Retention,
 	) {}
 
-	public static create(
-		emoji: Emoji,
-		title: Title,
-		url: Url,
-		retention: Retention,
-	): Target {
+	public static create(emoji: Emoji, title: Title, url: Url, retention: Retention): Target {
 		return new Target(emoji, title, url, retention);
 	}
 }

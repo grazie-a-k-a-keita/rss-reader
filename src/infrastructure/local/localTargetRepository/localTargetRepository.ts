@@ -14,9 +14,7 @@ export class LocalTargetRepository implements TargetRepository {
 	}
 
 	public async findAll(): Promise<Target[]> {
-		return this.readAll().map(([emoji, title, url, retention]) =>
-			this.toDomain(emoji, title, url, Number(retention)),
-		);
+		return this.readAll().map(([emoji, title, url, retention]) => this.toDomain(emoji, title, url, Number(retention)));
 	}
 
 	private readAll(): string[][] {
@@ -28,17 +26,7 @@ export class LocalTargetRepository implements TargetRepository {
 			.map((line) => line.split(","));
 	}
 
-	private toDomain(
-		emoji: string,
-		title: string,
-		url: string,
-		retention: number,
-	): Target {
-		return Target.create(
-			new Emoji(emoji),
-			new Title(title),
-			new Url(url),
-			new Retention(retention),
-		);
+	private toDomain(emoji: string, title: string, url: string, retention: number): Target {
+		return Target.create(new Emoji(emoji), new Title(title), new Url(url), new Retention(retention));
 	}
 }

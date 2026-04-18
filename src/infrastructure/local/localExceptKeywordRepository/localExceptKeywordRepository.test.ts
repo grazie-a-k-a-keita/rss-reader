@@ -6,15 +6,13 @@ describe("LocalExceptKeywordRepository", () => {
 	let exceptKeywordRepository: ExceptKeywordRepository;
 
 	beforeEach(() => {
-		exceptKeywordRepository = new LocalExceptKeywordRepository(
-			"test/exceptKeyword.txt",
-		);
+		exceptKeywordRepository = new LocalExceptKeywordRepository("test/exceptKeyword.txt");
 	});
 
 	test("findAll()", async () => {
 		const exceptKeywords = await exceptKeywordRepository.findAll();
 
-		expect(exceptKeywords[0].character.value).toBe("claude");
-		expect(exceptKeywords[1].character.value).toBe("copilot");
+		expect(exceptKeywords[0]?.character.value).toBe("claude");
+		expect(exceptKeywords[1]?.character.value).toBe("copilot");
 	});
 });

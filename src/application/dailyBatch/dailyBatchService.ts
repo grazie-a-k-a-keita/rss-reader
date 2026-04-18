@@ -7,14 +7,15 @@ import { TransferModelDomainService } from "../../domain/services/transferModelD
 import type { NotifyManager } from "../shared/notifyManager.js";
 
 export class DailyBatchService {
+	private readonly filterFeedDomainService = new FilterFeedDomainService();
+	private readonly transferModelDomainService = new TransferModelDomainService();
+
 	public constructor(
 		private readonly exceptKeywordRepository: ExceptKeywordRepository,
 		private readonly targetRepository: TargetRepository,
 		private readonly historyRepository: HistoryRepository,
 		private readonly feedRepository: FeedRepository,
 		private readonly notifyManager: NotifyManager,
-		private readonly filterFeedDomainService: FilterFeedDomainService = new FilterFeedDomainService(),
-		private readonly transferModelDomainService: TransferModelDomainService = new TransferModelDomainService(),
 	) {}
 
 	public async execute() {
@@ -32,12 +33,7 @@ export class DailyBatchService {
 			const feeds = await this.feedRepository.fetch(target.url);
 
 			// 履歴に存在する通知済みのフィードと、タイトルに特定のキーワードを含むフィードを除外
-			const newFeeds = this.filterFeedDomainService.filter(
-				targets,
-				feeds,
-				histories,
-				exceptKeywords,
-			);
+			const newFeeds = this.filterFeedDomainService.filter(targets, feeds, histories, exceptKeywords);
 
 			// 新規フィードを通知
 			for (const feed of newFeeds) {
@@ -47,9 +43,7 @@ export class DailyBatchService {
 			}
 
 			// 通知した新規フィードを履歴に追加
-			await this.historyRepository.saveHistories(
-				this.transferModelDomainService.toHistory(target, newFeeds),
-			);
+			await this.historyRepository.saveHistories(this.transferModelDomainService.toHistory(target, newFeeds));
 		}
 	}
 }

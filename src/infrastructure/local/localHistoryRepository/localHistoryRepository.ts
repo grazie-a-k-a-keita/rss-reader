@@ -22,9 +22,7 @@ export class LocalHistoryRepository implements HistoryRepository {
 	public async deleteExpired(): Promise<void> {
 		const existingHistories = this.readAll();
 
-		const nonExpiredHistories = existingHistories.filter((history) =>
-			dayjs(history.expire.value).isAfter(dayjs()),
-		);
+		const nonExpiredHistories = existingHistories.filter((history) => dayjs(history.expire.value).isAfter(dayjs()));
 
 		this.writeAll(nonExpiredHistories);
 	}
@@ -59,15 +57,7 @@ export class LocalHistoryRepository implements HistoryRepository {
 		fs.writeFileSync(this.url, lines.join("\n"));
 	}
 
-	private toDomain(
-		targetTitle: string,
-		title: string,
-		expireDate: Date,
-	): History {
-		return History.create(
-			new Category(targetTitle),
-			new Title(title),
-			new Expire(expireDate),
-		);
+	private toDomain(targetTitle: string, title: string, expireDate: Date): History {
+		return History.create(new Category(targetTitle), new Title(title), new Expire(expireDate));
 	}
 }
