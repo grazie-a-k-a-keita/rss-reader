@@ -31,22 +31,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ap-northeast-1
+
       - name: Run notify
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: pnpm run dev
-
-      - name: Commit CSV changes
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          git add src/data/* 
-          if ! git diff --staged --quiet; then
-            git commit -m "Update Notify History by workflow ${GITHUB_RUN_ID}" || echo "commit failed (no changes)"
-            git push
-          else
-            echo "No changes to commit"
-          fi

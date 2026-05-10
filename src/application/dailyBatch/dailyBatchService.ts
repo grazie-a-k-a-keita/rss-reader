@@ -43,7 +43,7 @@ export class DailyBatchService {
 			}
 
 			// 通知した新規フィードを履歴に追加
-			await this.historyRepository.saveHistories(this.transferModelDomainService.toHistory(target, newFeeds));
+			await this.historyRepository.saveNewHistories(this.transferModelDomainService.toHistory(target, newFeeds));
 		}
 	}
 }
