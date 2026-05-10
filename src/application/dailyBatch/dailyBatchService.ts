@@ -4,9 +4,11 @@ import type { HistoryRepository } from "../../domain/models/history/historyRepos
 import type { TargetRepository } from "../../domain/models/target/targetRepository.js";
 import { FilterFeedDomainService } from "../../domain/services/filterFeedDomainService/filterFeedDomainService.js";
 import { TransferModelDomainService } from "../../domain/services/transferModelDomainService/transferModelDomainService.js";
+import { Logger } from "../../shared/logger/logger.js";
 import type { NotifyManager } from "../shared/notifyManager.js";
 
 export class DailyBatchService {
+	private readonly logger = new Logger("DailyBatch");
 	private readonly filterFeedDomainService = new FilterFeedDomainService();
 	private readonly transferModelDomainService = new TransferModelDomainService();
 
@@ -27,13 +29,19 @@ export class DailyBatchService {
 		const histories = await this.historyRepository.findAll();
 		const exceptKeywords = await this.exceptKeywordRepository.findAll();
 
+		this.logger.info(`通知履歴の件数: ${histories.length}`);
+
 		// 対象ごとに処理
 		for (const target of targets) {
 			// フィードを取得
 			const feeds = await this.feedRepository.fetch(target.url);
 
+			this.logger.info(`対象: ${target.title.value}, 取得したフィードの数: ${feeds.length}`);
+
 			// 履歴に存在する通知済みのフィードと、タイトルに特定のキーワードを含むフィードを除外
 			const newFeeds = this.filterFeedDomainService.filter(targets, feeds, histories, exceptKeywords);
+
+			this.logger.info(`対象: ${target.title.value}, 通知対象の新規フィードの数: ${newFeeds.length}`);
 
 			// 新規フィードを通知
 			for (const feed of newFeeds) {
