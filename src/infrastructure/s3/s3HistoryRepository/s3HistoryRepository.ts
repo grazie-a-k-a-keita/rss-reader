@@ -29,12 +29,15 @@ export class S3HistoryRepository implements HistoryRepository {
 		const existingHistories = await this.findAll();
 		const nonExpiredHistories = existingHistories.filter((history) => dayjs(history.expire.value).isAfter(dayjs()));
 
+		if (nonExpiredHistories.length === existingHistories.length) return;
+
 		await this.writeAll(nonExpiredHistories);
 	}
 
 	public async saveNewHistories(newHistories: History[]): Promise<void> {
-		const existingHistories = await this.findAll();
+		if (newHistories.length === 0) return;
 
+		const existingHistories = await this.findAll();
 		await this.writeAll([...existingHistories, ...newHistories]);
 	}
 

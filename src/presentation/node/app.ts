@@ -2,6 +2,7 @@ import { DuckDBInstance } from "@duckdb/node-api";
 import { DailyBatchService } from "../../application/dailyBatch/dailyBatchService.js";
 import { config } from "../../config/config.js";
 import { DiscordNotifyManager } from "../../infrastructure/discord/discordNotifyManager/discordNotifyManager.js";
+import { LocalNotifyManager } from "../../infrastructure/local/localNotifyManager/localNotifyManager.js";
 import { RssFeedRepository } from "../../infrastructure/rss/rssFeedRepository/rssFeedRepository.js";
 import { S3ExceptKeywordRepository } from "../../infrastructure/s3/s3ExceptKeywordRepository/s3ExceptKeywordRepository.js";
 import { S3HistoryRepository } from "../../infrastructure/s3/s3HistoryRepository/s3HistoryRepository.js";
@@ -19,7 +20,7 @@ export async function app() {
 		new S3TargetRepository(connection, config.s3.bucketName),
 		new S3HistoryRepository(connection, config.s3.bucketName),
 		new RssFeedRepository(),
-		new DiscordNotifyManager(config.discordWebhookUrl),
+		new LocalNotifyManager(),
 	);
 
 	await dailyBatchService.execute();
