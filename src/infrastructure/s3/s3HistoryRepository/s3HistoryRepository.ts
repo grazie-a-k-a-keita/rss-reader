@@ -49,7 +49,10 @@ export class S3HistoryRepository implements HistoryRepository {
 
 		if (histories.length > 0) {
 			const values = histories
-				.map((h) => `('${h.category.value}', '${h.title.value}', '${dayjs(h.expire.value).format("YYYY-MM-DD")}')`)
+				.map(
+					(h) =>
+						`('${this.escape(h.category.value)}', '${this.escape(h.title.value)}', '${dayjs(h.expire.value).format("YYYY-MM-DD")}')`,
+				)
 				.join(",");
 
 			await this.connection.run(`INSERT INTO temp_histories VALUES ${values};`);
@@ -65,5 +68,9 @@ export class S3HistoryRepository implements HistoryRepository {
 
 	private toDomain(targetTitle: string, title: string, expireDate: Date): History {
 		return History.create(new Category(targetTitle), new Title(title), new Expire(expireDate));
+	}
+
+	private escape(str: string) {
+		return str.replace(/'/g, "");
 	}
 }
